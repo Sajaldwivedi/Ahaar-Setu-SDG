@@ -244,11 +244,10 @@ const RequestPage = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="h-[600px] bg-white rounded-lg shadow-sm overflow-hidden">
-                    <FoodMap
-                      donations={filteredDonations}
+                  <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg">
+                    <FoodMap 
+                      donations={filteredDonations} 
                       onMarkerClick={handleMarkerClick}
-                      zoom={12}
                     />
                   </div>
                 )}
