@@ -7,14 +7,17 @@ import { MapPin } from 'lucide-react';
 // Fix for default marker icons in Leaflet with React
 // This is needed because Leaflet's default marker icons don't work properly with React
 const icon = L.icon({
-  iconUrl: '/Ahaar-Setu/marker-icon.png',
-  iconRetinaUrl: '/Ahaar-Setu/marker-icon-2x.png',
-  shadowUrl: '/Ahaar-Setu/marker-shadow.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
+
+// Set default icon for all markers
+L.Marker.prototype.options.icon = icon;
 
 // Custom marker icon for food donations
 const foodIcon = L.divIcon({
