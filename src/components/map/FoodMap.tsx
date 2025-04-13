@@ -7,9 +7,9 @@ import { MapPin } from 'lucide-react';
 // Fix for default marker icons in Leaflet with React
 // This is needed because Leaflet's default marker icons don't work properly with React
 const icon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+  iconUrl: '/Ahaar-Setu/marker-icon.png',
+  iconRetinaUrl: '/Ahaar-Setu/marker-icon-2x.png',
+  shadowUrl: '/Ahaar-Setu/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -77,6 +77,7 @@ const FoodMap: React.FC<FoodMapProps> = ({
   zoom = 5 
 }) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [mapReady, setMapReady] = useState(false);
   
   // Get user's location on component mount
   useEffect(() => {
@@ -92,10 +93,15 @@ const FoodMap: React.FC<FoodMapProps> = ({
     }
   }, []);
   
-  // Add CSS for custom markers
+  // Add CSS for custom markers and ensure Leaflet CSS is loaded
   useEffect(() => {
     const style = document.createElement('style');
     style.innerHTML = `
+      .leaflet-container {
+        height: 100%;
+        width: 100%;
+        min-height: 600px;
+      }
       .custom-marker {
         display: flex;
         align-items: center;
@@ -109,6 +115,9 @@ const FoodMap: React.FC<FoodMapProps> = ({
       }
     `;
     document.head.appendChild(style);
+    
+    // Set map as ready after a short delay to ensure CSS is loaded
+    setTimeout(() => setMapReady(true), 100);
     
     return () => {
       document.head.removeChild(style);
@@ -130,8 +139,12 @@ const FoodMap: React.FC<FoodMapProps> = ({
     }
   };
   
+  if (!mapReady) {
+    return <div className="w-full h-[600px] bg-gray-100 animate-pulse rounded-lg" />;
+  }
+  
   return (
-    <div className="w-full h-full rounded-lg overflow-hidden">
+    <div className="w-full h-[600px] rounded-lg overflow-hidden">
       <MapContainer 
         center={userLocation || center} 
         zoom={zoom} 
