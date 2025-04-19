@@ -112,9 +112,16 @@ const FoodMap: React.FC<FoodMapProps> = ({
       }
       .leaflet-popup-content-wrapper {
         border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
       .leaflet-popup-content {
         margin: 0.75rem;
+      }
+      .leaflet-popup {
+        z-index: 1000;
+      }
+      .leaflet-popup-close-button {
+        padding: 8px !important;
       }
     `;
     document.head.appendChild(style);
@@ -147,12 +154,13 @@ const FoodMap: React.FC<FoodMapProps> = ({
   }
   
   return (
-    <div className="w-full h-[600px] rounded-lg overflow-hidden">
+    <div className="w-full h-[600px] rounded-lg overflow-hidden relative">
       <MapContainer 
         center={userLocation || center} 
         zoom={zoom} 
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
+        className="z-10"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.maptiler.com/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
