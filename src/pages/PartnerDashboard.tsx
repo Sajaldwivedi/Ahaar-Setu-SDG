@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Footer from '../components/layout/Footer';
 import { Search, History, Users, ChevronRight, AlertTriangle, Bell } from 'lucide-react';
 import { useFood } from '../contexts/FoodContext';
+import FoodMap from '../components/map/FoodMap';
 
 const PartnerDashboard = () => {
   const { getClaimedDonations } = useFood();
@@ -214,9 +215,12 @@ const PartnerDashboard = () => {
           
           <div className="bg-white rounded-xl shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold text-purple mb-4">Nearby Food Availability</h2>
-            <div className="bg-cream rounded-lg h-64 flex items-center justify-center mb-4">
-              {/* This would be a map in the actual implementation */}
-              <p className="text-slate">Interactive map with nearby food listings</p>
+            <div className="rounded-lg overflow-hidden mb-4">
+              <FoodMap
+                donations={claimedDonations}
+                zoom={12}
+                center={[12.9716, 77.5946]} // Default to Bangalore
+              />
             </div>
             <div className="flex justify-center">
               <Link 
