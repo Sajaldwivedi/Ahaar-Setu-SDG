@@ -151,7 +151,7 @@ const Home = () => {
                   
                   <div className="bg-white rounded-lg shadow-md p-6 border border-purple-light/10 transform -rotate-1 hover:rotate-0 transition-transform hover-card">
                     <img 
-                      src="https://images.unsplash.com/photo-1605192554106-c250a5d76a91?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80" 
+                      src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                       alt="Restaurant donation" 
                       className="rounded-lg mb-4 h-40 w-full object-cover shadow-md"
                     />
