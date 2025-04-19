@@ -91,7 +91,7 @@ const AllClaimsPage = () => {
                           </h3>
                           <div className="flex items-center text-sm text-slate mt-1">
                             <MapPin size={14} className="mr-1" />
-                            <span>{donation.location}</span>
+                            <span>{donation.pickupLocation}</span>
                           </div>
                         </div>
                         <span className="text-xs bg-yellow/20 text-yellow px-2 py-1 rounded-full">
@@ -110,7 +110,7 @@ const AllClaimsPage = () => {
                           <div className="flex flex-wrap gap-1">
                             {donation.nutritionTags.map(tag => (
                               <span key={tag} className="text-xs bg-mint/20 text-slate rounded-full px-2 py-0.5">
-                                {tag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                {tag.replace(/-/g, ' ').replace(/w/g, l => l.toUpperCase())}
                               </span>
                             ))}
                           </div>
@@ -118,8 +118,8 @@ const AllClaimsPage = () => {
                       )}
 
                       <div className="mt-2 text-sm text-slate">
-                        <p>From: {donation.donor}</p>
-                        <p>Claimed on: {new Date(donation.claimDate || '').toLocaleDateString()}</p>
+                        <p className="flex items-center gap-1">From: <span className="font-medium">{donation.donorName || donation.donor}</span></p>
+                        <p>Claimed on: {donation.claimDate ? new Date(donation.claimDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not available'}</p>
                       </div>
                     </div>
                   ))}
