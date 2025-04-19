@@ -139,7 +139,7 @@ const PartnerDashboard = () => {
                   <div key={donation.id} className="border-b border-purple-light/20 pb-3 last:border-0">
                     <div className="flex justify-between">
                       <span className="font-medium text-slate">
-                        {donation.quantity} {donation.foodtype && donation.foodtype.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        {donation.quantity} {donation.quantityUnit} {donation.foodType && donation.foodType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                       </span>
                       <span className="text-sm text-slate">
                         {donation.pickupDate || 'Not set'}
