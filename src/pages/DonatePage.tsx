@@ -7,6 +7,7 @@ import { useFood } from '../contexts/FoodContext';
 import { usePoints } from '../contexts/PointsContext';
 import { useAuth } from '../contexts/AuthContext';
 import { foodImages } from '../assets/foodImages';
+import LocationPicker from '../components/map/LocationPicker';
 
 const foodCategories = [
   { id: 'fruits', label: 'Fresh Produce', image: foodImages.fruits, description: 'Fresh fruits, vegetables, and herbs' },
@@ -39,6 +40,7 @@ const DonatePage = () => {
     expirationDate: '',
     expirationTime: '',
     location: '',
+    coordinates: null as [number, number] | null,
     nutritionTags: [],
     description: '',
     quantity: '',
@@ -46,6 +48,7 @@ const DonatePage = () => {
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
   
   const nutritionTagOptions = [
     { value: 'high-protein', label: 'High Protein' },
@@ -120,6 +123,7 @@ const DonatePage = () => {
           donorID: user?.uid || '',
           donorName: user?.displayName || 'Anonymous',
           pickupLocation: formData.location?.trim() || '',
+          coordinates: formData.coordinates,
           quantity: Number(formData.quantity),
           quantityUnit: formData.quantityUnit,
           nutritionTags: formData.nutritionTags,
@@ -198,6 +202,19 @@ const DonatePage = () => {
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
               <div className="p-6 md:p-8">
                 <div className="flex mb-8">
+                  {showLocationPicker && (
+                    <LocationPicker
+                      onLocationSelect={({ coordinates, address }) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          location: address,
+                          coordinates: coordinates
+                        }));
+                        setShowLocationPicker(false);
+                      }}
+                      onClose={() => setShowLocationPicker(false)}
+                    />
+                  )}
                   <div className={`flex-1 border-b-2 pb-4 ${activeStep >= 1 ? 'border-coral' : 'border-gray-200'}`}>
                     <div className="flex items-center">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center ${activeStep >= 1 ? 'bg-coral text-white' : 'bg-gray-200 text-slate'}`}>
@@ -316,14 +333,24 @@ const DonatePage = () => {
                     <div className="space-y-6 animate-fade-in">
                       <div>
                         <label className="block text-sm font-medium text-slate mb-1">Pickup Location</label>
-                        <input
-                          type="text"
-                          value={formData.location}
-                          onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                          className="w-full p-2 border border-slate/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple/20"
-                          placeholder="Enter pickup address"
-                        />
+                        <div className="relative">
+                          <input
+                            type="text"
+                            value={formData.location}
+                            className="w-full p-2 border border-slate/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple/20"
+                            placeholder="Enter pickup address"
+                            readOnly
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowLocationPicker(true)}
+                            className="absolute right-3 top-2.5 text-slate hover:text-purple transition-colors"
+                          >
+                            <MapPin size={20} />
+                          </button>
+                        </div>
                         {formErrors.location && <p className="text-coral text-sm mt-1">{formErrors.location}</p>}
+                        <p className="mt-2 text-sm text-slate">Click the map icon to select your location on the map</p>
                       </div>
                       
                       <div>
