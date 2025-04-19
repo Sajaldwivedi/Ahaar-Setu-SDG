@@ -20,6 +20,7 @@ import AllDonationsPage from './pages/AllDonationsPage';
 import AllClaimsPage from './pages/AllClaimsPage';
 import About from './pages/About';
 import RedeemRewards from './pages/RedeemRewards';
+import Team from './pages/Team';
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -65,6 +66,7 @@ const App = () => {
                 <Route path="/all-claims" element={<AllClaimsPage />} />
                 <Route path="/rewards" element={<RedeemRewards />} />
                 <Route path="/redeem-rewards" element={<RedeemRewards />} />
+                <Route path="/team" element={<Team />} />
               </Routes>
               <Toaster />
             </div>

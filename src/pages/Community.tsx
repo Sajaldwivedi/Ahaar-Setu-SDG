@@ -32,14 +32,14 @@ const Community = () => {
     {
       id: 'event1',
       title: 'Community Food Drive',
-      date: 'May 15, 2023',
+      date: 'May 15, 2025',
       location: 'Central Park, Indiranagar',
       description: 'Join us for a community food drive to collect surplus food from local markets.'
     },
     {
       id: 'event2',
       title: 'Food Waste Management Workshop',
-      date: 'May 22, 2023',
+      date: 'May 22, 2025',
       location: 'Hope Foundation Office',
       description: 'Learn effective techniques for food preservation and waste reduction.'
     }

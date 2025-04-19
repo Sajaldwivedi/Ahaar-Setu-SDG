@@ -56,7 +56,7 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-lg mb-4 text-purple">Contact Us</h3>
             <p className="text-slate mb-2">Have questions or feedback?</p>
-            <Link to="/contact" className="text-teal hover:text-purple transition-colors underline">
+            <Link to="/team" className="text-teal hover:text-purple transition-colors underline">
               Reach out to our team
             </Link>
             <div className="mt-6">
