@@ -14,13 +14,33 @@ Aahaar Setu is a web platform that connects food donors with those in need, help
 
 ## Tech Stack 💻
 
-- **Frontend**: React with TypeScript
+### Frontend 🎨
+- **Framework**: React with TypeScript
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
 - **Routing**: React Router
-- **Authentication**: Firebase
 - **Maps Integration**: Leaflet
 - **Build Tool**: Vite
+
+### Backend 🔧
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Authentication**: Firebase Auth
+- **Real-time Updates**: Socket.IO
+- **API Documentation**: Swagger/OpenAPI
+- **Task Queue**: Bull
+
+### Database 🗄️
+- **Primary Database**: MongoDB
+- **Caching**: Redis
+- **Search Engine**: Elasticsearch
+- **File Storage**: Firebase Storage
+
+### DevOps & Infrastructure 🚀
+- **CI/CD**: GitHub Actions
+- **Hosting**: Vercel (Frontend), Railway (Backend)
+- **Monitoring**: Sentry
+- **Analytics**: Firebase Analytics
 
 ## Getting Started 🚀
 
@@ -61,6 +81,7 @@ bun dev
 
 ## Project Structure 📁
 
+### Frontend Structure
 ```
 src/
 ├── components/     # Reusable UI components
@@ -69,6 +90,29 @@ src/
 ├── lib/            # Utility functions and configurations
 ├── pages/          # Page components
 └── assets/         # Static assets
+```
+
+### Backend Structure
+```
+server/
+├── api/           # API routes and controllers
+├── config/        # Environment configurations
+├── middleware/    # Custom middleware functions
+├── models/        # Database models and schemas
+├── services/      # Business logic and external services
+├── utils/         # Helper functions and utilities
+└── websocket/     # Real-time communication handlers
+```
+
+### Database Schema
+```
+Collections:
+├── users/         # User profiles and preferences
+├── donations/     # Food donation listings
+├── claims/        # Donation claims and status
+├── organizations/ # Partner organization details
+├── reviews/       # Feedback and ratings
+└── rewards/       # Points and rewards data
 ```
 
 ## Contributing 🤝
