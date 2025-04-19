@@ -3,6 +3,7 @@ import Footer from '../components/layout/Footer';
 import FoodCard from '../components/ui/FoodCard';
 import { Link } from 'react-router-dom';
 import { Search, Filter, MapPin, List, Map as MapIcon, Clock, Calendar, Phone, X } from 'lucide-react';
+import { formatDate, formatDateForInput } from '../lib/dateUtils';
 import { useToast } from '../hooks/use-toast';
 import BridgeDivider from '../components/ui/BridgeDivider';
 import { useFood } from '../contexts/FoodContext';
@@ -230,7 +231,7 @@ const RequestPage = () => {
                         key={donation.id}
                         title={donation.foodType}
                         quantity={`${donation.quantity} ${donation.quantityUnit}`}
-                        expiration={new Date(donation.expirationDate).toLocaleDateString()}
+                        expiration={formatDate(donation.expirationDate)}
                         location={donation.pickupLocation}
                         nutritionTags={donation.nutritionTags}
                         isUrgent={isUrgent(donation)}
@@ -321,7 +322,7 @@ const RequestPage = () => {
                             required
                             value={claimForm.pickupDate}
                             onChange={handleClaimFormChange}
-                            min={new Date().toISOString().split('T')[0]}
+                            min={formatDateForInput(new Date())}
                             className="pl-10 block w-full rounded-md border border-purple-light/30 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-teal"
                           />
                         </div>

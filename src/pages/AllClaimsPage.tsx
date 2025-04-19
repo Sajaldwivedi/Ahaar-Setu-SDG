@@ -4,6 +4,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { Search, Filter, MapPin, Calendar, Tag } from 'lucide-react';
 import { useFood } from '../contexts/FoodContext';
+import { formatDate } from '../lib/dateUtils';
 
 const AllClaimsPage = () => {
   const { getClaimedDonations } = useFood();
@@ -101,7 +102,7 @@ const AllClaimsPage = () => {
 
                       <div className="mt-2 flex items-center text-sm text-slate">
                         <Calendar size={14} className="mr-1" />
-                        <span>Pickup: {donation.pickupDate} at {donation.pickupTime}</span>
+                        <span>Pickup: {formatDate(donation.pickupDate)} at {donation.pickupTime}</span>
                       </div>
 
                       {donation.nutritionTags.length > 0 && (
@@ -119,7 +120,7 @@ const AllClaimsPage = () => {
 
                       <div className="mt-2 text-sm text-slate">
                         <p className="flex items-center gap-1">From: <span className="font-medium">{donation.donorName || donation.donor}</span></p>
-                        <p>Claimed on: {donation.claimDate ? new Date(donation.claimDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not available'}</p>
+                        <p>Claimed on: {donation.pickupDate ? formatDate(donation.pickupDate) : 'Not available'}</p>
                       </div>
                     </div>
                   ))}

@@ -189,7 +189,16 @@
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar for Recent Donations */
+.space-y-4.overflow-y-auto::-webkit-scrollbar {
+  display: none;
+}
+
+.space-y-4.overflow-y-auto {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }

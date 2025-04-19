@@ -54,7 +54,7 @@ const DonorDashboard = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-teal">
+            <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-teal h-[700px] overflow-y-auto">
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-xl font-semibold text-purple mb-1">Impact Summary</h2>
@@ -118,8 +118,8 @@ const DonorDashboard = () => {
               </div>
             </div>
             
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <div className="flex justify-between items-start mb-6">
+            <div className="bg-white rounded-xl shadow-md p-6 h-[700px] flex flex-col">
+              <div className="flex justify-between items-start mb-6 sticky top-0 bg-white z-10">
                 <div>
                   <h2 className="text-xl font-semibold text-purple mb-1">Recent Donations</h2>
                   <p className="text-slate text-sm">Your last few contributions</p>
@@ -129,7 +129,7 @@ const DonorDashboard = () => {
                 </div>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-4 overflow-y-auto flex-1">
                 {userDonations.map(donation => (
                   <div key={donation.id} className="border-b border-purple-light/20 pb-3 last:border-0">
                     <div className="flex justify-between items-start">
@@ -155,14 +155,14 @@ const DonorDashboard = () => {
                 ))}
               </div>
               
-              <div className="mt-4 text-center">
+              <div className="mt-4 text-center sticky bottom-0 bg-white pt-4">
                 <Link to="/all-donations" className="text-teal hover:underline text-sm flex items-center justify-center">
                   View All Donations <ChevronRight size={16} />
                 </Link>
               </div>
             </div>
             
-            <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="bg-white rounded-xl shadow-md p-6 h-[700px] overflow-y-auto">
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h2 className="text-xl font-semibold text-purple mb-1">Notifications</h2>

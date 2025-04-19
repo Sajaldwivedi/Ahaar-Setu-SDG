@@ -3,7 +3,7 @@ import { useFood } from '../contexts/FoodContext';
 
 import Footer from '../components/layout/Footer';
 import { Search, Filter, MapPin, Calendar, Clock, ChevronDown } from 'lucide-react';
-import { format } from 'date-fns';
+import { formatDate } from '../lib/dateUtils';
 
 const AllDonationsPage = () => {
   const { donations } = useFood();
@@ -69,7 +69,7 @@ const AllDonationsPage = () => {
                         </div>
                         <div className="flex items-center">
                           <Calendar size={16} className="mr-2 text-coral" />
-                          <span>Expires: {format(new Date(donation.expirationDate), 'MMM d, yyyy')}</span>
+                          <span>Expires: {formatDate(donation.expirationDate)}</span>
                         </div>
                         <div className="flex items-center">
                           <Clock size={16} className="mr-2 text-yellow" />
@@ -107,4 +107,4 @@ const AllDonationsPage = () => {
   );
 };
 
-export default AllDonationsPage; 
+export default AllDonationsPage;
