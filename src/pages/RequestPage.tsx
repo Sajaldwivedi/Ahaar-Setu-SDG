@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import FoodCard from '../components/ui/FoodCard';
 import { Link } from 'react-router-dom';
@@ -87,7 +86,7 @@ const RequestPage = () => {
 
   const filteredDonations = useMemo(() => {
     return donations.filter(donation => {
-      const matchesSearch = donation.foodType.toLowerCase().includes(filters.foodType.toLowerCase());
+      const matchesSearch = (donation.foodType?.toLowerCase() || '').includes(filters.foodType.toLowerCase());
       const matchesFoodType = !filters.foodType || donation.foodType === filters.foodType;
       const matchesUrgency = !filters.urgency || isUrgent(donation);
       const matchesNutritionTags = filters.nutritionTags.length === 0 || 
@@ -111,7 +110,6 @@ const RequestPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar userRole="partner" />
       <main className="flex-grow bg-cream">
         <div className="container mx-auto py-8 px-4">
           <div className="text-center mb-8">
@@ -233,13 +231,13 @@ const RequestPage = () => {
                         title={donation.foodType}
                         quantity={`${donation.quantity} ${donation.quantityUnit}`}
                         expiration={new Date(donation.expirationDate).toLocaleDateString()}
-                        location={donation.location}
+                        location={donation.pickupLocation}
                         nutritionTags={donation.nutritionTags}
                         isUrgent={isUrgent(donation)}
                         onAction={() => handleClaim(donation)}
                         actionLabel="Claim"
-                        donor={donation.donor}
-                        foodTypeId={donation.foodTypeId}
+                        donor={donation.donorName}
+                        foodTypeId={donation.foodType}
                       />
                     ))}
                   </div>

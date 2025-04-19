@@ -32,24 +32,9 @@ const FoodCard: React.FC<FoodCardProps> = ({
   // Get the appropriate image based on food type
   const getFoodImage = () => {
     if (image) return image;
-    if (foodTypeId && foodImages[foodTypeId as keyof typeof foodImages]) {
-      return foodImages[foodTypeId as keyof typeof foodImages];
+    if (foodTypeId) {
+      return foodImages[foodTypeId as keyof typeof foodImages] || foodImages.packaged;
     }
-    
-    const foodType = title.toLowerCase();
-    if (foodType.includes('fruit') || foodType.includes('vegetable') || foodType.includes('produce')) {
-      return foodImages.fruits;
-    } else if (foodType.includes('dairy') || foodType.includes('milk') || foodType.includes('cheese')) {
-      return foodImages.dairy;
-    } else if (foodType.includes('bread') || foodType.includes('bakery') || foodType.includes('pastry')) {
-      return foodImages.bakery;
-    } else if (foodType.includes('cooked') || foodType.includes('meal') || foodType.includes('prepared')) {
-      return foodImages.cooked;
-    } else if (foodType.includes('packaged') || foodType.includes('canned') || foodType.includes('boxed')) {
-      return foodImages.packaged;
-    }
-    
-    // Default image if no match
     return foodImages.packaged;
   };
 

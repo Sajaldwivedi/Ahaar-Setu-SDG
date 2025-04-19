@@ -1,33 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useFood } from '../contexts/FoodContext';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { Plus, History, Award, ChevronRight, Star, Bell } from 'lucide-react';
 
 const DonorDashboard = () => {
-  const mockDonations = [
-    {
-      id: 'don1',
-      food: '10 kg Rice',
-      date: 'April 5, 2023',
-      status: 'Claimed by Hope NGO',
-      rating: 5
-    },
-    {
-      id: 'don2',
-      food: '5 kg Vegetables',
-      date: 'April 2, 2023',
-      status: 'Distributed',
-      rating: 4
-    },
-    {
-      id: 'don3',
-      food: '20 Bread Loaves',
-      date: 'March 28, 2023',
-      status: 'Picked up',
-      rating: 5
+  const { user } = useAuth();
+  const { getUserDonations } = useFood();
+  const [userDonations, setUserDonations] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (user?.uid) {
+      const donations = getUserDonations(user.uid);
+      setUserDonations(donations);
     }
-  ];
+  }, [user, getUserDonations]);
   
   const mockNotifications = [
     {
@@ -46,13 +34,12 @@ const DonorDashboard = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar userRole="donor" />
       <main className="flex-grow bg-cream">
         <div className="container mx-auto py-8 px-4">
           <div className="bg-purple rounded-xl p-6 md:p-8 mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-white">Welcome, Cafe Green!</h1>
+                <h1 className="text-3xl font-bold text-white">Welcome, {user?.displayName || 'Anonymous'}!</h1>
                 <p className="text-purple-light mt-2">Your contributions are making a difference</p>
               </div>
               <div className="mt-4 md:mt-0">
@@ -80,30 +67,53 @@ const DonorDashboard = () => {
               <div className="mt-2">
                 <div className="flex justify-between mb-1">
                   <span className="text-slate text-sm">Meals Provided</span>
-                  <span className="text-slate font-medium">50/100</span>
+                  <span className="text-slate font-medium">
+                    {Math.round(userDonations.reduce((acc, donation) => acc + (donation.quantity || 0), 0))}/200
+                  </span>
                 </div>
                 <div className="progress-bar">
-                  <div className="progress-bar-fill" style={{ width: '50%' }}></div>
+                  <div 
+                    className="progress-bar-fill" 
+                    style={{ 
+                      width: `${Math.min(100, (userDonations.reduce((acc, donation) => acc + donation.quantity, 0) / 3 / 200) * 100)}%` 
+                    }}
+                  ></div>
                 </div>
                 
                 <div className="flex justify-between mb-1 mt-4">
                   <span className="text-slate text-sm">Food Donated</span>
-                  <span className="text-slate font-medium">35 kg</span>
+                  <span className="text-slate font-medium">
+                    {userDonations.reduce((acc, donation) => acc + (donation.quantity || 0), 0)} kg
+                  </span>
                 </div>
                 <div className="progress-bar">
-                  <div className="progress-bar-fill" style={{ width: '35%' }}></div>
+                  <div 
+                    className="progress-bar-fill" 
+                    style={{ 
+                      width: `${Math.min(100, (userDonations.reduce((acc, donation) => acc + donation.quantity, 0) / 100) * 100)}%` 
+                    }}
+                  ></div>
                 </div>
                 
                 <div className="flex justify-between mb-1 mt-4">
                   <span className="text-slate text-sm">CO2 Emissions Saved</span>
-                  <span className="text-slate font-medium">25 kg</span>
+                  <span className="text-slate font-medium">
+                    {Math.round(userDonations.reduce((acc, donation) => acc + (donation.quantity || 0), 0) * 0.5)} kg
+                  </span>
                 </div>
                 <div className="progress-bar">
-                  <div className="progress-bar-fill" style={{ width: '25%' }}></div>
+                  <div 
+                    className="progress-bar-fill" 
+                    style={{ 
+                      width: `${Math.min(100, (userDonations.reduce((acc, donation) => acc + donation.quantity, 0) / 2 / 50) * 100)}%` 
+                    }}
+                  ></div>
                 </div>
                 
                 <div className="mt-6 text-center">
-                  <p className="text-slate font-medium">You've earned <span className="text-coral font-bold">150 points</span></p>
+                  <p className="text-slate font-medium">
+                    You've earned <span className="text-coral font-bold">{userDonations.length * 10} points</span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -120,19 +130,26 @@ const DonorDashboard = () => {
               </div>
               
               <div className="space-y-4">
-                {mockDonations.map(donation => (
+                {userDonations.map(donation => (
                   <div key={donation.id} className="border-b border-purple-light/20 pb-3 last:border-0">
-                    <div className="flex justify-between">
-                      <span className="font-medium text-slate">{donation.food}</span>
-                      <span className="text-sm text-slate">{donation.date}</span>
-                    </div>
-                    <div className="flex justify-between items-center mt-1">
-                      <span className="text-sm text-slate/80">{donation.status}</span>
-                      <div className="flex">
-                        {[...Array(donation.rating)].map((_, i) => (
-                          <Star key={i} size={14} className="text-yellow fill-yellow" />
-                        ))}
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="font-medium text-slate block">{donation.foodType}</span>
+                        <span className="text-sm text-slate/80 block mt-1">{donation.description}</span>
                       </div>
+                      <div className="text-right">
+                        <span className="text-sm text-slate block">{new Date(donation.createdAt?.seconds * 1000).toLocaleDateString()}</span>
+                        <span className="text-xs text-coral block mt-1">Expires: {donation.expirationDate}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center mt-2">
+                      <div className="flex items-center gap-2">
+                        <span className={`text-sm px-2 py-1 rounded-full ${donation.status === 'available' ? 'bg-mint/20 text-mint' : 'bg-coral/20 text-coral'}`}>
+                          {donation.status}
+                        </span>
+                        <span className="text-sm text-slate/80">{donation.pickupLocation}</span>
+                      </div>
+                      <span className="text-sm font-medium text-slate">{donation.quantity} {donation.quantityUnit}</span>
                     </div>
                   </div>
                 ))}
@@ -185,10 +202,24 @@ const DonorDashboard = () => {
                 </div>
               </div>
               
-              <div className="mt-6 text-center">
-                <Link to="/rewards" className="btn-secondary py-2 px-4 inline-flex items-center">
-                  <Award size={18} className="mr-2" /> Redeem Rewards
-                </Link>
+              <div className="mt-6 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-purple-light/10 p-4 rounded-lg text-center">
+                    <h4 className="font-medium text-purple mb-2">Food Coupon</h4>
+                    <p className="text-slate text-sm mb-2">20% off at FoodMart</p>
+                    <p className="text-xs text-coral">50 points</p>
+                  </div>
+                  <div className="bg-purple-light/10 p-4 rounded-lg text-center">
+                    <h4 className="font-medium text-purple mb-2">Shopping Token</h4>
+                    <p className="text-slate text-sm mb-2">₹500 at BigMart</p>
+                    <p className="text-xs text-coral">100 points</p>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <Link to="/rewards" className="btn-secondary py-2 px-4 inline-flex items-center">
+                    <Award size={18} className="mr-2" /> View All Rewards
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

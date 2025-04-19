@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useToast } from '../components/ui/use-toast';
-import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import { Gift, Star, Trophy, Award, CheckCircle } from 'lucide-react';
+import { Gift, Star, Trophy, Award, CheckCircle, ShoppingBag, Coffee, Ticket } from 'lucide-react';
 import { usePoints } from '../contexts/PointsContext';
 
 interface Reward {
@@ -49,6 +48,38 @@ const RedeemRewards = () => {
       points: 2000,
       icon: <Gift className="w-6 h-6 text-purple-500" />,
       isRedeemed: false
+    },
+    {
+      id: '5',
+      title: '₹500 Shopping Voucher',
+      description: 'Redeem at major retail stores including Amazon, Flipkart, and more',
+      points: 1500,
+      icon: <ShoppingBag className="w-6 h-6 text-blue-500" />,
+      isRedeemed: false
+    },
+    {
+      id: '6',
+      title: 'Restaurant Dining Coupon',
+      description: '30% off at selected premium restaurants in your city',
+      points: 800,
+      icon: <Coffee className="w-6 h-6 text-orange-500" />,
+      isRedeemed: false
+    },
+    {
+      id: '7',
+      title: 'Movie Tickets',
+      description: 'Get 2 free movie tickets at PVR Cinemas',
+      points: 1200,
+      icon: <Ticket className="w-6 h-6 text-red-500" />,
+      isRedeemed: false
+    },
+    {
+      id: '8',
+      title: '₹200 Food Delivery Coupon',
+      description: 'Valid on Swiggy and Zomato orders above ₹500',
+      points: 600,
+      icon: <Gift className="w-6 h-6 text-green-500" />,
+      isRedeemed: false
     }
   ]);
 
@@ -70,7 +101,6 @@ const RedeemRewards = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -134,4 +164,4 @@ const RedeemRewards = () => {
   );
 };
 
-export default RedeemRewards; 
+export default RedeemRewards;

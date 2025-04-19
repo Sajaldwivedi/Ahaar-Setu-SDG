@@ -1,14 +1,42 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { User, Building } from 'lucide-react';
 import BridgeDivider from '../components/ui/BridgeDivider';
+import { signInWithGoogle, getCurrentUser } from '../lib/auth';
 
 const Login = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   
+  useEffect(() => {
+    // Check if user is already signed in
+    const user = getCurrentUser();
+    if (user) {
+      // You can handle already signed-in users here
+      console.log('User is already signed in:', user.email);
+    }
+  }, []);
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError(null);
+    const { user, error } = await signInWithGoogle();
+    setLoading(false);
+    
+    if (error) {
+      setError(error);
+      return;
+    }
+
+    if (user) {
+      // You can handle successful sign-in here
+      console.log('Successfully signed in:', user.email);
+    }
+  };
+
   const handleDonorSelect = () => {
     navigate('/donor-dashboard');
   };
@@ -28,7 +56,29 @@ const Login = () => {
               <p className="text-slate mb-8 text-lg">
                 Building bridges between surplus food and those in need
               </p>
-              
+
+              {/* Google Sign In Button */}
+              <div className="mb-8">
+                <button
+                  onClick={handleGoogleSignIn}
+                  disabled={loading}
+                  className="w-full max-w-md mx-auto flex items-center justify-center gap-2 bg-white border-2 border-gray-200 rounded-lg px-6 py-3 text-gray-800 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
+                  <span>{loading ? 'Signing in...' : 'Sign in with Google'}</span>
+                </button>
+                {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
+              </div>
+
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Or continue as</span>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <button 
                   onClick={handleDonorSelect}
@@ -57,7 +107,7 @@ const Login = () => {
                 </button>
               </div>
               
-              <p className="text-sm text-slate mt-8">
+              <p className="text-sm text-slate mt-4">
                 Select a role to experience Aahaar Setu. No login required for demo.
               </p>
             </div>

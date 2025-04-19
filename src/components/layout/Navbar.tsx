@@ -1,16 +1,17 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Heart } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface NavbarProps {
   userRole?: 'donor' | 'partner' | null;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ userRole = null }) => {
+const Navbar: React.FC<NavbarProps> = ({ userRole: initialUserRole = null }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const { user, userRole } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,19 +77,48 @@ const Navbar: React.FC<NavbarProps> = ({ userRole = null }) => {
               }`}></span>
             </Link>
             
-            <div className="flex space-x-3">
-              <Link 
-                to="/donor-dashboard" 
-                className="btn-donor px-5 py-2 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center"
-              >
-                <Heart size={16} className="mr-1 fill-white/50" /> I'm a Donor
-              </Link>
-              <Link 
-                to="/partner-dashboard" 
-                className="btn-partner px-5 py-2 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center"
-              >
-                <Heart size={16} className="mr-1 fill-white/50" /> Community Partner
-              </Link>
+            <div className="flex items-center space-x-3">
+              {user && (
+                userRole === 'donor' ? (
+                  <Link 
+                    to="/donor-dashboard" 
+                    className="btn-donor px-5 py-2 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center"
+                  >
+                    <Heart size={16} className="mr-1 fill-white/50" /> Donor Dashboard
+                  </Link>
+                ) : userRole === 'partner' ? (
+                  <Link 
+                    to="/partner-dashboard" 
+                    className="btn-partner px-5 py-2 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center"
+                  >
+                    <Heart size={16} className="mr-1 fill-white/50" /> Partner Dashboard
+                  </Link>
+                ) : null
+              )}
+              {user ? (
+                <Link
+                  to="/profile"
+                  className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 bg-purple-light/10 px-4 py-2 rounded-lg transition-colors"
+                >
+                  <div className="w-8 h-8 rounded-full bg-purple flex items-center justify-center">
+                    {user.photoURL ? (
+                      <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full" />
+                    ) : (
+                      <span className="text-sm text-white">
+                        {user.displayName?.[0] || user.email?.[0] || '?'}
+                      </span>
+                    )}
+                  </div>
+                  <span className="font-medium">{user.displayName || 'Profile'}</span>
+                </Link>
+              ) : (
+                <Link
+                  to="/auth"
+                  className="bg-purple text-white px-5 py-2 rounded-lg font-medium hover:bg-purple-dark transition-colors duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </div>
 
@@ -135,20 +165,51 @@ const Navbar: React.FC<NavbarProps> = ({ userRole = null }) => {
               </Link>
               
               <div className="flex flex-col space-y-3 pt-2">
-                <Link 
-                  to="/donor-dashboard" 
-                  className="btn-donor py-3 text-center shadow-md flex items-center justify-center"
-                  onClick={toggleMenu}
-                >
-                  <Heart size={16} className="mr-1 fill-white/50" /> I'm a Donor
-                </Link>
-                <Link 
-                  to="/partner-dashboard" 
-                  className="btn-partner py-3 text-center shadow-md flex items-center justify-center"
-                  onClick={toggleMenu}
-                >
-                  <Heart size={16} className="mr-1 fill-white/50" /> Community Partner
-                </Link>
+                {user && (
+                  userRole === 'donor' ? (
+                    <Link 
+                      to="/donor-dashboard" 
+                      className="btn-donor py-3 text-center shadow-md flex items-center justify-center"
+                      onClick={toggleMenu}
+                    >
+                      <Heart size={16} className="mr-1 fill-white/50" /> Donor Dashboard
+                    </Link>
+                  ) : userRole === 'partner' ? (
+                    <Link 
+                      to="/partner-dashboard" 
+                      className="btn-partner py-3 text-center shadow-md flex items-center justify-center"
+                      onClick={toggleMenu}
+                    >
+                      <Heart size={16} className="mr-1 fill-white/50" /> Partner Dashboard
+                    </Link>
+                  ) : null
+                )}
+                {user ? (
+                  <Link
+                    to="/profile"
+                    className="flex items-center justify-center space-x-2 bg-purple-light/10 py-3 rounded-lg"
+                    onClick={toggleMenu}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-purple flex items-center justify-center">
+                      {user.photoURL ? (
+                        <img src={user.photoURL} alt="Profile" className="w-full h-full rounded-full" />
+                      ) : (
+                        <span className="text-sm text-white">
+                          {user.displayName?.[0] || user.email?.[0] || '?'}
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-medium">{user.displayName || 'Profile'}</span>
+                  </Link>
+                ) : (
+                  <Link
+                    to="/auth"
+                    className="bg-purple text-white py-3 rounded-lg font-medium hover:bg-purple-dark transition-colors duration-200 shadow-md text-center"
+                    onClick={toggleMenu}
+                  >
+                    Sign In
+                  </Link>
+                )}
               </div>
             </div>
           </div>

@@ -1,6 +1,4 @@
-
 import React from 'react';
-import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import HeroSection from '../components/sections/HeroSection';
 import StatsSection from '../components/sections/StatsSection';
@@ -15,7 +13,6 @@ import { Link } from 'react-router-dom';
 const Home = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
       <main className="flex-grow">
         <HeroSection />
         

@@ -1,24 +1,25 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { collection, addDoc, updateDoc, doc, getDocs, query, orderBy, limit, where, Timestamp } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { useAuth } from '../contexts/AuthContext';
 
 interface FoodDonation {
   id: string;
   foodType: string;
-  foodTypeId: string;
-  quantity: string;
+  description: string;
+  donorID: string;
+  donorName: string;
+  pickupLocation: string;
+  quantity: number;
   quantityUnit: string;
-  expirationDate: string;
-  expirationTime?: string;
-  location: string;
-  status: 'available' | 'claimed' | 'expired';
   nutritionTags: string[];
-  photo?: File | null;
-  description?: string;
-  donor: string;
+  expirationDate: string;
+  expirationTime: string;
+  status?: 'available' | 'claimed' | 'expired';
   claimedBy?: string;
   pickupDate?: string;
   pickupTime?: string;
-  notes?: string;
-  createdAt: string;
+  createdAt?: any; // Can be string or Timestamp
 }
 
 interface FoodContextType {
@@ -28,47 +29,136 @@ interface FoodContextType {
   getAvailableDonations: () => FoodDonation[];
   getClaimedDonations: () => FoodDonation[];
   getRecentDonations: (limit?: number) => FoodDonation[];
+  getUserDonations: (userId: string) => FoodDonation[];
 }
 
 const FoodContext = createContext<FoodContextType | undefined>(undefined);
 
 export const FoodProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [donations, setDonations] = useState<FoodDonation[]>([]);
+  const { user } = useAuth();
 
-  const addDonation = (donation: Omit<FoodDonation, 'id' | 'status' | 'createdAt'>) => {
-    const newDonation: FoodDonation = {
-      ...donation,
-      id: Math.random().toString(36).substr(2, 9),
-      status: 'available',
-      createdAt: new Date().toISOString()
+  // Fetch donations from Firestore
+  useEffect(() => {
+    const fetchDonations = async () => {
+      try {
+        console.log('Attempting to fetch donations...');
+        const donationsRef = collection(db, 'donations');
+        console.log('Got collection reference');
+        
+        // Fetch all donations
+        const q = query(
+          donationsRef,
+          orderBy('createdAt', 'desc')
+        );
+        console.log('Created query');
+        
+        const querySnapshot = await getDocs(q);
+        console.log('Got query snapshot, number of docs:', querySnapshot.size);
+        
+        const donationsList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as FoodDonation[];
+        
+        console.log('Processed donations:', donationsList);
+        setDonations(donationsList);
+      } catch (error) {
+        console.error('Error fetching donations:', {
+          error,
+          errorMessage: error instanceof Error ? error.message : 'Unknown error',
+          errorStack: error instanceof Error ? error.stack : undefined
+        });
+      }
     };
-    setDonations(prev => [...prev, newDonation]);
+
+    if (user?.uid) {
+      fetchDonations();
+    } else {
+      setDonations([]);
+    }
+  }, [user]);
+
+  const addDonation = async (donation: Omit<FoodDonation, 'id' | 'status' | 'createdAt'>) => {
+    try {
+      console.log('Starting addDonation with data:', donation);
+      
+      // Validate required fields
+      if (!donation.foodType) {
+        throw new Error('Food type is required');
+      }
+      if (!donation.pickupLocation) {
+        throw new Error('Pickup location is required');
+      }
+
+      const donationsRef = collection(db, 'donations');
+      console.log('Got collection reference');
+      
+      const newDonation = {
+        ...donation,
+        foodType: donation.foodType.trim(), // Ensure foodType is properly formatted
+        status: 'available',
+        createdAt: Timestamp.now()
+      };
+      console.log('Prepared new donation:', newDonation);
+      
+      const docRef = await addDoc(donationsRef, newDonation);
+      console.log('Successfully added document with ID:', docRef.id);
+      
+      const createdDonation = {
+        id: docRef.id,
+        ...newDonation
+      } as FoodDonation;
+      
+      setDonations(prev => [createdDonation, ...prev]);
+      return createdDonation;
+    } catch (error) {
+      console.error('Detailed error in addDonation:', {
+        error,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        errorStack: error instanceof Error ? error.stack : undefined,
+        donation
+      });
+      throw error;
+    }
   };
 
-  const updateDonationStatus = (
+  const updateDonationStatus = async (
     id: string, 
     status: FoodDonation['status'],
     claimDetails?: { claimedBy: string; pickupDate: string; pickupTime: string }
   ) => {
-    setDonations(prev => prev.map(donation => {
-      if (donation.id === id) {
-        return {
-          ...donation,
-          status,
-          ...(claimDetails && {
-            claimedBy: claimDetails.claimedBy,
-            claimDate: new Date().toISOString(),
-            pickupDate: claimDetails.pickupDate,
-            pickupTime: claimDetails.pickupTime
-          })
-        };
-      }
-      return donation;
-    }));
+    try {
+      const donationRef = doc(db, 'donations', id);
+      const updateData = { status, ...claimDetails };
+      await updateDoc(donationRef, updateData);
+      
+      setDonations(prev =>
+        prev.map(donation =>
+          donation.id === id
+            ? { ...donation, ...updateData }
+            : donation
+        )
+      );
+    } catch (error) {
+      console.error('Error updating donation:', error);
+      throw error;
+    }
   };
 
   const getAvailableDonations = () => {
-    return donations.filter(donation => donation.status === 'available');
+    console.log('Getting available donations, total donations:', donations.length);
+    const availableDonations = donations.filter(donation => {
+      console.log('Checking donation:', {
+        id: donation.id,
+        status: donation.status,
+        foodType: donation.foodType,
+        createdAt: donation.createdAt
+      });
+      return donation.status === 'available';
+    });
+    console.log('Available donations:', availableDonations.length);
+    return availableDonations;
   };
 
   const getClaimedDonations = () => {
@@ -81,6 +171,10 @@ export const FoodProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .slice(0, limit);
   };
 
+  const getUserDonations = (userId: string) => {
+    return donations.filter(donation => donation.donorID === userId);
+  };
+
   return (
     <FoodContext.Provider value={{
       donations,
@@ -88,7 +182,8 @@ export const FoodProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateDonationStatus,
       getAvailableDonations,
       getClaimedDonations,
-      getRecentDonations
+      getRecentDonations,
+      getUserDonations
     }}>
       {children}
     </FoodContext.Provider>
@@ -101,4 +196,4 @@ export const useFood = () => {
     throw new Error('useFood must be used within a FoodProvider');
   }
   return context;
-}; 
+};

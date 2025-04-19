@@ -1,12 +1,10 @@
 import React from 'react';
-import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { Heart, Users, Leaf, Target } from 'lucide-react';
 
 const About = () => {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
       <main className="flex-grow bg-cream">
         {/* Hero Section */}
         <section className="bg-gradient-to-b from-purple to-purple-light text-white py-20">

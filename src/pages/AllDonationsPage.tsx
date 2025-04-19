@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useFood } from '../contexts/FoodContext';
-import Navbar from '../components/layout/Navbar';
+
 import Footer from '../components/layout/Footer';
 import { Search, Filter, MapPin, Calendar, Clock, ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
@@ -11,15 +11,15 @@ const AllDonationsPage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
 
   const filteredDonations = donations.filter(donation => {
-    const matchesSearch = donation.foodType.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         donation.location.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = 
+      (donation.foodType?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+      (donation.pickupLocation?.toLowerCase() || '').includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || donation.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
       <main className="flex-grow bg-cream py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -60,11 +60,12 @@ const AllDonationsPage = () => {
                 <div key={donation.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
                   <div className="flex flex-col md:flex-row justify-between gap-4">
                     <div className="flex-1">
+                      <MapPin className="text-slate" size={16} /> {donation.pickupLocation}
                       <h3 className="text-xl font-semibold text-purple mb-2">{donation.foodType}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-slate">
                         <div className="flex items-center">
                           <MapPin size={16} className="mr-2 text-teal" />
-                          <span>{donation.location}</span>
+                          <span className="font-medium">{donation.foodType}</span>
                         </div>
                         <div className="flex items-center">
                           <Calendar size={16} className="mr-2 text-coral" />
@@ -72,7 +73,7 @@ const AllDonationsPage = () => {
                         </div>
                         <div className="flex items-center">
                           <Clock size={16} className="mr-2 text-yellow" />
-                          <span>Quantity: {donation.quantity} {donation.quantityUnit}</span>
+                          <span>{donation.quantity} kg</span>
                         </div>
                       </div>
                       {donation.nutritionTags && donation.nutritionTags.length > 0 && (

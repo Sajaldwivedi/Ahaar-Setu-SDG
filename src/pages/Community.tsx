@@ -1,6 +1,4 @@
-
 import React from 'react';
-import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { SearchIcon, Calendar, MessageSquare, Utensils, Info, Users, BookOpen } from 'lucide-react';
 import BridgeDivider from '../components/ui/BridgeDivider';
@@ -73,7 +71,6 @@ const Community = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
       <main className="flex-grow bg-cream">
         <div className="container mx-auto py-8 px-4">
           <div className="text-center mb-8">

@@ -37,7 +37,6 @@ const AllClaimsPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar userRole="partner" />
       <main className="flex-grow bg-cream">
         <div className="container mx-auto py-8 px-4">
           <div className="text-center mb-8">
@@ -88,7 +87,7 @@ const AllClaimsPage = () => {
                       <div className="flex justify-between items-start">
                         <div>
                           <h3 className="font-medium text-purple">
-                            {donation.quantity} {donation.quantityUnit} {donation.foodType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            {donation.quantity} {donation.quantityUnit} {(donation.foodType || '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                           </h3>
                           <div className="flex items-center text-sm text-slate mt-1">
                             <MapPin size={14} className="mr-1" />
@@ -138,4 +137,4 @@ const AllClaimsPage = () => {
   );
 };
 
-export default AllClaimsPage; 
+export default AllClaimsPage;

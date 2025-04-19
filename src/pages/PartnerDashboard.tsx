@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { Search, History, Users, ChevronRight, AlertTriangle, Bell } from 'lucide-react';
 import { useFood } from '../contexts/FoodContext';
@@ -50,7 +49,6 @@ const PartnerDashboard = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar userRole="partner" />
       <main className="flex-grow bg-cream">
         <div className="container mx-auto py-8 px-4">
           <div className="bg-teal rounded-xl p-6 md:p-8 mb-8">
@@ -141,16 +139,16 @@ const PartnerDashboard = () => {
                   <div key={donation.id} className="border-b border-purple-light/20 pb-3 last:border-0">
                     <div className="flex justify-between">
                       <span className="font-medium text-slate">
-                        {donation.quantity} {donation.quantityUnit} {donation.foodType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        {donation.quantity} {donation.foodtype && donation.foodtype.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                       </span>
                       <span className="text-sm text-slate">
-                        {new Date(donation.claimDate || '').toLocaleDateString()}
+                        {donation.createdAt ? new Date(donation.createdAt).toLocaleDateString() : ''}
                       </span>
                     </div>
                     <div className="flex justify-between items-center mt-1">
-                      <span className="text-sm text-slate/80">From: {donation.donor}</span>
+                      <span className="text-sm text-slate/80">From: {donation.donorName || 'Anonymous'}</span>
                       <span className="text-xs bg-teal/20 text-teal px-2 py-0.5 rounded-full">
-                        Pickup: {donation.pickupDate} {donation.pickupTime}
+                        Pickup: {donation.pickupDate || 'Not set'} {donation.pickupTime || ''}
                       </span>
                     </div>
                   </div>

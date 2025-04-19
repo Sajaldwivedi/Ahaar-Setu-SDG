@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import Navbar from '../components/layout/Navbar';
+import React, { useState, useEffect } from 'react';
 import Footer from '../components/layout/Footer';
 import { Calendar, Clock, MapPin, Camera, Tag, CheckCircle, AlertTriangle, Info, Image as ImageIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
 import { useFood } from '../contexts/FoodContext';
 import { usePoints } from '../contexts/PointsContext';
+import { useAuth } from '../contexts/AuthContext';
 import { foodImages } from '../assets/foodImages';
 
 const foodCategories = [
@@ -21,19 +21,28 @@ const DonatePage = () => {
   const navigate = useNavigate();
   const { addDonation, getRecentDonations } = useFood();
   const { addPoints } = usePoints();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      toast({
+        title: 'Authentication Required',
+        description: 'Please log in to donate food',
+        variant: 'destructive'
+      });
+      navigate('/login');
+    }
+  }, [user, navigate, toast]);
   const [activeStep, setActiveStep] = useState(1);
   const [formData, setFormData] = useState({
     foodType: '',
-    quantity: '',
-    quantityUnit: 'kg',
     expirationDate: '',
     expirationTime: '',
     location: '',
-    photo: null,
     nutritionTags: [],
-    dedicateTo: '',
-    isDedicated: false,
-    description: ''
+    description: '',
+    quantity: '',
+    quantityUnit: 'kg', // Default unit
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -80,8 +89,8 @@ const DonatePage = () => {
     
     if (step === 1) {
       if (!formData.foodType) errors.foodType = 'Food type is required';
-      if (!formData.quantity) errors.quantity = 'Quantity is required';
       if (!formData.expirationDate) errors.expirationDate = 'Expiration date is required';
+      if (!formData.quantity) errors.quantity = 'Quantity is required';
     } else if (step === 2) {
       if (!formData.location) errors.location = 'Pickup location is required';
     }
@@ -100,22 +109,51 @@ const DonatePage = () => {
     setActiveStep(prev => prev - 1);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (Object.keys(formErrors).length === 0) {
-      addDonation({
-        ...formData,
-        foodTypeId: selectedCategory || 'packaged',
-        donorName: 'Cafe Green', // This would come from user context in a real app
-        status: 'available'
-      });
-      addPoints(10); // Add 10 points for each donation
-      toast({
-        title: "Success!",
-        description: "Your food donation has been listed successfully.",
-      });
-      navigate('/donor-dashboard');
+      try {
+        await addDonation({
+          foodType: formData.foodType || '',
+          description: formData.description || '',
+          donorID: user?.uid || '',
+          donorName: user?.displayName || 'Anonymous',
+          pickupLocation: formData.location?.trim() || '',
+          quantity: Number(formData.quantity),
+          quantityUnit: formData.quantityUnit,
+          nutritionTags: formData.nutritionTags,
+          expirationDate: formData.expirationDate,
+          expirationTime: formData.expirationTime || '23:59'
+        });
+        
+        addPoints(10); // Add 10 points for each donation
+        toast({
+          title: "Success!",
+          description: "Your food donation has been listed successfully.",
+        });
+        navigate('/donor-dashboard');
+      } catch (error) {
+        console.error('Error adding donation:', error);
+        // Log the data we're trying to send
+        console.log('Attempted to add donation with data:', {
+          foodType: formData.foodType || '',
+          description: formData.description || '',
+          donorID: user?.uid || '',
+          donorName: user?.displayName || 'Anonymous',
+          pickupLocation: formData.location?.trim() || '',
+          quantity: Number(formData.quantity),
+          quantityUnit: formData.quantityUnit,
+          nutritionTags: formData.nutritionTags,
+          expirationDate: formData.expirationDate,
+          expirationTime: formData.expirationTime || '23:59'
+        });
+        toast({
+          title: "Error",
+          description: error instanceof Error ? error.message : "Failed to add donation. Please try again.",
+          variant: "destructive"
+        });
+      }
     }
   };
 
@@ -149,7 +187,6 @@ const DonatePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar userRole="donor" />
       <main className="flex-grow bg-cream">
         <div className="container mx-auto py-8 px-4">
           <div className="max-w-4xl mx-auto">
@@ -217,8 +254,8 @@ const DonatePage = () => {
                         </div>
                         {formErrors.foodType && <p className="text-coral text-sm mt-1">{formErrors.foodType}</p>}
                       </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
+
+                      <div className="grid grid-cols-2 gap-4 mb-4">
                         <div>
                           <label className="block text-sm font-medium text-slate mb-1">Quantity</label>
                           <input
@@ -227,6 +264,8 @@ const DonatePage = () => {
                             onChange={(e) => setFormData(prev => ({ ...prev, quantity: e.target.value }))}
                             className="w-full p-2 border border-slate/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple/20"
                             placeholder="Enter quantity"
+                            min="0"
+                            step="0.1"
                           />
                           {formErrors.quantity && <p className="text-coral text-sm mt-1">{formErrors.quantity}</p>}
                         </div>
@@ -239,9 +278,11 @@ const DonatePage = () => {
                           >
                             <option value="kg">Kilograms (kg)</option>
                             <option value="g">Grams (g)</option>
-                            <option value="l">Liters (L)</option>
+                            <option value="l">Liters (l)</option>
                             <option value="ml">Milliliters (ml)</option>
-                            <option value="pcs">Pieces</option>
+                            <option value="pcs">Pieces (pcs)</option>
+                            <option value="boxes">Boxes</option>
+                            <option value="packets">Packets</option>
                           </select>
                         </div>
                       </div>
@@ -345,36 +386,6 @@ const DonatePage = () => {
                           ))}
                         </div>
                       </div>
-                      
-                      <div className="border-t border-purple-light/20 pt-4">
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id="isDedicated"
-                            name="isDedicated"
-                            checked={formData.isDedicated}
-                            onChange={handleCheckboxChange}
-                            className="h-4 w-4 text-teal border-purple-light/30 rounded"
-                          />
-                          <label htmlFor="isDedicated" className="ml-2 text-sm text-slate">
-                            Donate in memory of someone (Optional)
-                          </label>
-                        </div>
-                        
-                        {formData.isDedicated && (
-                          <div className="mt-3">
-                            <input
-                              type="text"
-                              id="dedicateTo"
-                              name="dedicateTo"
-                              value={formData.dedicateTo}
-                              onChange={handleChange}
-                              placeholder="Enter name"
-                              className="block w-full rounded-md border border-purple-light/30 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-purple-light"
-                            />
-                          </div>
-                        )}
-                      </div>
                     </div>
                   )}
                   
@@ -402,13 +413,6 @@ const DonatePage = () => {
                               <span className="text-sm text-slate/70">Food Type:</span>
                               <span className="text-sm font-medium text-slate">
                                 {formData.foodType ? formData.foodType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '-'}
-                              </span>
-                            </div>
-                            
-                            <div className="flex justify-between">
-                              <span className="text-sm text-slate/70">Quantity:</span>
-                              <span className="text-sm font-medium text-slate">
-                                {formData.quantity ? `${formData.quantity} ${formData.quantityUnit}` : '-'}
                               </span>
                             </div>
                             
@@ -441,15 +445,6 @@ const DonatePage = () => {
                                 )}
                               </div>
                             </div>
-                            
-                            {formData.isDedicated && formData.dedicateTo && (
-                              <div className="flex justify-between">
-                                <span className="text-sm text-slate/70">Dedicated to:</span>
-                                <span className="text-sm font-medium text-slate">
-                                  {formData.dedicateTo}
-                                </span>
-                              </div>
-                            )}
                           </div>
                         </div>
                         
@@ -474,10 +469,10 @@ const DonatePage = () => {
                               <div className="flex justify-between items-start">
                                 <div>
                                   <h5 className="font-medium text-purple">
-                                    {formData.quantity} {formData.quantityUnit} {formData.foodType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                    {formData.foodType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                   </h5>
                                   <p className="text-xs text-slate mt-1">
-                                    From: Cafe Green
+                                    From: {user?.displayName || 'Anonymous'}
                                   </p>
                                 </div>
                                 
@@ -572,7 +567,7 @@ const DonatePage = () => {
                 <div key={donation.id} className="border-b border-purple-light/20 pb-3 last:border-0">
                   <div className="flex justify-between">
                     <span className="font-medium text-slate">
-                      {donation.quantity} {donation.quantityUnit} {donation.foodType.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      {donation.foodType}
                     </span>
                     <span className="text-sm text-slate">
                       {new Date(donation.createdAt).toLocaleDateString()}
