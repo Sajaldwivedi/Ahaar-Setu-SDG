@@ -195,37 +195,15 @@ const FoodMap: React.FC<FoodMapProps> = ({
               position={donation.coordinates}
               icon={isUrgent(donation) ? urgentFoodIcon : foodIcon}
               eventHandlers={{
-                click: () => handleMarkerClick(donation)
+                click: (e) => {
+                  // Prevent the default popup from opening
+                  e.target.closePopup();
+                  // Call the click handler directly
+                  handleMarkerClick(donation);
+                }
               }}
-            >
-              <Popup>
-                <div className="min-w-[200px]">
-                  <h3 className="font-semibold text-purple mb-1">{donation.foodType}</h3>
-                  <p className="text-sm text-slate mb-2">{donation.quantity} {donation.quantityUnit}</p>
-                  <p className="text-xs text-slate mb-1">
-                    <span className="font-medium">Expires:</span> {new Date(donation.expirationDate).toLocaleDateString()}
-                  </p>
-                  <p className="text-xs text-slate mb-2">
-                    <span className="font-medium">Location:</span> {donation.location}
-                  </p>
-                  {donation.nutritionTags && donation.nutritionTags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mb-2">
-                      {donation.nutritionTags.map((tag, index) => (
-                        <span key={index} className="px-2 py-0.5 bg-purple-light/20 text-purple rounded-full text-xs">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  <button 
-                    className="w-full mt-2 bg-teal text-white py-1 px-3 rounded-md text-sm hover:bg-teal/90 transition-colors"
-                    onClick={() => handleMarkerClick(donation)}
-                  >
-                    View Details
-                  </button>
-                </div>
-              </Popup>
-            </Marker>
+            />
+
           );
         })}
       </MapContainer>
