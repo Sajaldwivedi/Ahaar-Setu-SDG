@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Footer from '../components/layout/Footer';
 import { Search, History, Users, ChevronRight, AlertTriangle, Bell } from 'lucide-react';
 import { useFood } from '../contexts/FoodContext';
-import FoodMap from '../components/map/FoodMap';
 
 const PartnerDashboard = () => {
   const { getClaimedDonations } = useFood();
@@ -143,13 +142,13 @@ const PartnerDashboard = () => {
                         {donation.quantity} {donation.foodtype && donation.foodtype.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                       </span>
                       <span className="text-sm text-slate">
-                        {donation.createdAt ? new Date(donation.createdAt).toLocaleDateString() : ''}
+                        {donation.pickupDate || 'Not set'}
                       </span>
                     </div>
                     <div className="flex justify-between items-center mt-1">
                       <span className="text-sm text-slate/80">From: {donation.donorName || 'Anonymous'}</span>
                       <span className="text-xs bg-teal/20 text-teal px-2 py-0.5 rounded-full">
-                        Pickup: {donation.pickupDate || 'Not set'} {donation.pickupTime || ''}
+                        Pickup Time: {donation.pickupTime || 'Not set'}
                       </span>
                     </div>
                   </div>
@@ -210,25 +209,6 @@ const PartnerDashboard = () => {
                   </Link>
                 </div>
               </div>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-            <h2 className="text-xl font-semibold text-purple mb-4">Nearby Food Availability</h2>
-            <div className="rounded-lg overflow-hidden mb-4">
-              <FoodMap
-                donations={claimedDonations}
-                zoom={12}
-                center={[12.9716, 77.5946]} // Default to Bangalore
-              />
-            </div>
-            <div className="flex justify-center">
-              <Link 
-                to="/request" 
-                className="btn-secondary py-2 px-4 inline-flex items-center"
-              >
-                <Search size={18} className="mr-2" /> Open Full Map
-              </Link>
             </div>
           </div>
           
