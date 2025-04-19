@@ -1,106 +1,107 @@
-# Ahaar-Setu 🍱
+# Ahaar Setu 🍱
 
-Ahaar-Setu is a food donation and distribution platform that connects food donors with those in need, helping to reduce food waste and combat hunger in communities.
+Aahaar Setu is a web platform that connects food donors with those in need, helping to reduce food waste and combat hunger in communities. Built with modern web technologies and a focus on user experience, it serves as a bridge between surplus food and hunger.
 
 ## Features 🌟
 
 - **Food Donation Management**: Easy-to-use interface for donors to list available food items
-- **Real-time Tracking**: Track the status of donations and pickups
+- **Real-time Tracking**: Monitor donation status and pickups in real-time
+- **Community Hub**: Connect with other donors, volunteers, and organizations
+- **Location Services**: Find nearby donation opportunities and recipients
+- **User Profiles**: Dedicated interfaces for donors, recipients, and volunteers
 - **Reward System**: Gamified experience with points and rewards for active donors
-- **User Profiles**: Separate interfaces for donors, recipients, and volunteers
-- **Location-based Services**: Find nearby donation opportunities and recipients
 - **Quality Assurance**: Food safety verification and quality control measures
 
 ## Tech Stack 💻
 
-- **Frontend**: React + TypeScript
-- **Styling**: Tailwind CSS + shadcn/ui
+- **Frontend**: React with TypeScript
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **Routing**: React Router
+- **Authentication**: Firebase
+- **Maps Integration**: Leaflet
 - **Build Tool**: Vite
-- **Package Manager**: npm/bun
-- **Type Checking**: TypeScript
-
-## Prerequisites 📋
-
-Before you begin, ensure you have the following installed:
-- Node.js (v18 or higher)
-- npm or bun package manager
 
 ## Getting Started 🚀
 
-1. **Clone the repository**
-   ```sh
-   git clone <repository-url>
-   cd Ahaar-Setu
-   ```
+### Prerequisites
 
-2. **Install dependencies**
-   ```sh
-   npm install
-   # or if using bun
-   bun install
-   ```
+- Node.js (v18 or higher)
+- npm or bun package manager
 
-3. **Start the development server**
-   ```sh
-   npm run dev
-   # or
-   bun dev
-   ```
+### Installation
 
-4. **Open your browser**
-   Navigate to `http://localhost:5173` to see the application running
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/ahaar-setu.git
+cd ahaar-setu
+```
+
+2. Install dependencies
+```bash
+npm install
+# or
+bun install
+```
+
+3. Set up environment variables
+```bash
+cp .env.example .env
+# Add your Firebase and other configuration details
+```
+
+4. Start the development server
+```bash
+npm run dev
+# or
+bun dev
+```
+
+5. Open [http://localhost:5173](http://localhost:5173) in your browser
 
 ## Project Structure 📁
 
 ```
-Ahaar-Setu/
-├── src/               # Source code
-├── public/            # Static assets
-├── components.json    # shadcn/ui components configuration
-├── tailwind.config.ts # Tailwind CSS configuration
-└── vite.config.ts    # Vite configuration
+src/
+├── components/     # Reusable UI components
+├── contexts/       # React context providers
+├── hooks/          # Custom React hooks
+├── lib/            # Utility functions and configurations
+├── pages/          # Page components
+└── assets/         # Static assets
 ```
 
 ## Contributing 🤝
 
+We welcome contributions! Please follow these steps:
+
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+### Development Guidelines
 
-## Available Scripts 📜
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build locally
-- `npm run lint` - Run ESLint
-- `npm run type-check` - Run TypeScript type checking
-
-## Deployment 🌐
-
-The project can be deployed to any static hosting service that supports single-page applications (SPA). Some recommended platforms:
-
-- Vercel
-- Netlify
-- GitHub Pages
-- Firebase Hosting
+- Follow the existing code style and conventions
+- Write meaningful commit messages
+- Update documentation as needed
+- Add tests for new features
 
 ## License 📄
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments 🙏
 
-- Thanks to all contributors who have helped shape Ahaar-Setu
+- Thanks to all contributors who have helped shape Ahaar Setu
 - Special thanks to the open-source community for the amazing tools and libraries
 - Inspired by the need to reduce food waste and help those in need
 
 ## Contact 📧
 
-For any queries or suggestions, please reach out to the project maintainers or open an issue in the repository.
+For questions or feedback, please reach out to our team through the [Community Hub](https://ahaar-setu.vercel.app/community) or open an issue on GitHub.
 
 ---
 
-Made with ❤️ for a better world
+Made with ❤️ in India | [Website](https://ahaar-setu.vercel.app) | [Report an Issue](https://github.com/yourusername/ahaar-setu/issues)
