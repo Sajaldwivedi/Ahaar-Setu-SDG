@@ -6,20 +6,38 @@
   "outputDirectory": "dist",
   "headers": [
     {
-      "source": "/(.*)\\.js",
+      "source": "/(.*)\\.js$",
       "headers": [
         {
           "key": "Content-Type",
-          "value": "application/javascript"
+          "value": "text/javascript; charset=utf-8"
         }
       ]
     },
     {
-      "source": "/(.*)\\.mjs",
+      "source": "/(.*)\\.mjs$",
       "headers": [
         {
           "key": "Content-Type",
-          "value": "application/javascript"
+          "value": "text/javascript; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.tsx?$",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/javascript; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.jsx?$",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/javascript; charset=utf-8"
         }
       ]
     }
