@@ -10,7 +10,7 @@
       "headers": [
         {
           "key": "Content-Type",
-          "value": "text/javascript; charset=utf-8"
+          "value": "application/javascript; charset=utf-8"
         }
       ]
     },
@@ -19,7 +19,7 @@
       "headers": [
         {
           "key": "Content-Type",
-          "value": "text/javascript; charset=utf-8"
+          "value": "application/javascript; charset=utf-8"
         }
       ]
     },
@@ -28,7 +28,7 @@
       "headers": [
         {
           "key": "Content-Type",
-          "value": "text/javascript; charset=utf-8"
+          "value": "application/javascript; charset=utf-8"
         }
       ]
     },
@@ -37,7 +37,7 @@
       "headers": [
         {
           "key": "Content-Type",
-          "value": "text/javascript; charset=utf-8"
+          "value": "application/javascript; charset=utf-8"
         }
       ]
     }
